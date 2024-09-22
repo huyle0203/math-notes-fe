@@ -4,6 +4,25 @@ import { useEffect, useRef, useState } from 'react';
 export default function Home() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [isDrawing, setIsDrawing] = useState(false);
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+    
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight - canvas.offsetTop;
+                ctx.lineCap = 'round';
+                ctx.lineWidth = 3;
+            }
+
+        }
+    }, []);
+
+
+
+
     const startDrawing = (e: React.MouseEvent<HTMLCanvasElement>) => {
         const canvas = canvasRef.current;
         if (canvas) {
@@ -25,12 +44,13 @@ export default function Home() {
         if (canvas) {
             const ctx = canvas.getContext('2d');
             if (ctx) {
-                ctx.strokeStyle = color;
+                ctx.strokeStyle = 'white';
                 ctx.lineTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
                 ctx.stroke();
             }
         }
-    }
+    };
+    
     const stopDrawing = () => {
         setIsDrawing(false);
     }
