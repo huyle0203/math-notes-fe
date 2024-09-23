@@ -40,6 +40,8 @@ export default function Home() {
         const canvas = canvasRef.current;
     
         if (canvas) {
+            console.log('Sending data...', '${import.meta.env.VITE_API_URL}/calculate');
+            console.log(import.meta.env.VITE_API_URL);
             const ctx = canvas.getContext('2d');
             if (ctx) {
                 canvas.width = window.innerWidth;
@@ -52,23 +54,27 @@ export default function Home() {
     }, []);
     //send data to BE
     const sendData = async () => {
+    try {
         const canvas = canvasRef.current;    
-
         if (canvas) {
+            console.log('Sending data...', `${import.meta.env.VITE_API_URL}/calculate`);
             const response = await axios({
                 method: 'post',
-                url: '${import.meta.env.VITE_API_URL}/calculate',
+                url: `${import.meta.env.VITE_API_URL}/calculate`,
                 data: {
                     image: canvas.toDataURL('image/png'),
                     dict_of_vars: dictOfVars,
                 }
             });
-
             const resp = await response.data;
             console.log('Response: ', resp );
         }
-    
+    } catch (error) {
+        console.error('Error sending data:', error);
     }
+}
+
+
 
     const resetCanvas = () => {
         const canvas = canvasRef.current;
