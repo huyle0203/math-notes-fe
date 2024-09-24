@@ -47,7 +47,7 @@ export default function Home() {
     useEffect(() => {
         if (reset) {
             resetCanvas();
-            //setLatexExpression([]);
+            setLatexExpression([]);
             setResult(undefined);
             setDictOfVars({});
             setReset(false);
@@ -239,6 +239,17 @@ export default function Home() {
         onMouseOut={stopDrawing}
         onMouseUp={stopDrawing}
         />
+        {latexExpression && latexExpression.map((latex, index) => (
+                <Draggable
+                    key={index}
+                    defaultPosition={latexPosition}
+                    onStop={(e, data) => setLatexPosition({ x: data.x, y: data.y })}
+                >
+                    <div className="absolute p-2 text-white rounded shadow-md">
+                        <div className="latex-content">{latex}</div>
+                    </div>
+                </Draggable>
+            ))}
     </>
   )
 }
