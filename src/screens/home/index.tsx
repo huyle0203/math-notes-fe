@@ -246,13 +246,14 @@ export default function Home() {
             ref={canvasRef}
             id='canvas'
             className='absolute top-0 left-0 w-full h-full' 
+            style={{ touchAction: 'none' }} // Prevent default touch actions
             onMouseDown={startDrawing}
             onMouseMove={draw}
             onMouseOut={stopDrawing}
             onMouseUp={stopDrawing}
-            onTouchStart={startDrawing} // Added touch event
-            onTouchMove={draw} // Added touch event
-            onTouchEnd={stopDrawing} // Added touch event
+            onTouchStart={startDrawing}
+            onTouchMove={draw}
+            onTouchEnd={stopDrawing}
         />
         {latexExpression && latexExpression.map((latex, index) => (
             <Draggable

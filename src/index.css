@@ -135,3 +135,16 @@ button:focus-visible {
     @apply bg-background text-foreground;
   }
 }
+
+#canvas {
+    touch-action: none; /* Prevent default touch actions */
+    position: fixed; /* Fix the position */
+    top: 0;
+    left: 0;
+    width: 100vw; /* Full viewport width */
+    height: 100vh; /* Full viewport height */
+}
+
+body {
+  overflow: hidden;
+}
