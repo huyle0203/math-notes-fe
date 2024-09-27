@@ -161,32 +161,39 @@ export default function Home() {
         }
     };
 
-    const startDrawing = (e: React.MouseEvent<HTMLCanvasElement>) => {
-        console.log('Mouse Down Event:', e); // Log the mouse event
+    const startDrawing = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+        // Check if the event is a touch event
+        const isTouch = 'touches' in e;
+        const offsetX = isTouch ? e.touches[0].clientX - canvasRef.current!.getBoundingClientRect().left : e.nativeEvent.offsetX;
+        const offsetY = isTouch ? e.touches[0].clientY - canvasRef.current!.getBoundingClientRect().top : e.nativeEvent.offsetY;
+
         const canvas = canvasRef.current;
         if (canvas) {
             canvas.style.background = 'black';
             const ctx = canvas.getContext('2d');
             if (ctx) {
                 ctx.beginPath();
-                ctx.moveTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+                ctx.moveTo(offsetX, offsetY);
                 setIsDrawing(true);
             }
         }
     }
 
-    const draw = (e: React.MouseEvent<HTMLCanvasElement>) => {
-        console.log('Mouse Move Event:', e); // Log the mouse event
+    const draw = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
         if (!isDrawing) {
             return;
         }
+        const isTouch = 'touches' in e;
+        const offsetX = isTouch ? e.touches[0].clientX - canvasRef.current!.getBoundingClientRect().left : e.nativeEvent.offsetX;
+        const offsetY = isTouch ? e.touches[0].clientY - canvasRef.current!.getBoundingClientRect().top : e.nativeEvent.offsetY;
+
         const canvas = canvasRef.current;
         if (canvas) {
             const ctx = canvas.getContext('2d');
             if (ctx) {
                 ctx.strokeStyle = isEraser ? 'black' : color;
                 ctx.lineWidth = isEraser ? 20 : 3;
-                ctx.lineTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+                ctx.lineTo(offsetX, offsetY);
                 ctx.stroke();
             }
         }
@@ -239,10 +246,14 @@ export default function Home() {
             ref={canvasRef}
             id='canvas'
             className='absolute top-0 left-0 w-full h-full' 
+            style={{ touchAction: 'none' }} // Prevent default touch actions
             onMouseDown={startDrawing}
             onMouseMove={draw}
             onMouseOut={stopDrawing}
             onMouseUp={stopDrawing}
+            onTouchStart={startDrawing}
+            onTouchMove={draw}
+            onTouchEnd={stopDrawing}
         />
         {latexExpression && latexExpression.map((latex, index) => (
             <Draggable
